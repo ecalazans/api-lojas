@@ -26,7 +26,7 @@ class StoreController {
 
   // mostrar uma loja
   async show(request, response) {
-    const { cnpj } = request.params
+    const { cnpj, filial } = request.query
 
     const spreadsheetId = process.env.SPREADSHEET_ID;
 
@@ -39,9 +39,15 @@ class StoreController {
         range: "CONSOLIDADO LOJAS!A3:H",
       });
 
+      if (!cnpj && !filial) {
+        return response.status(404).json({ message: "Precisa informar um CNPJ ou FILIAL" });
+      }
+
       const stores = (responseApi.data.values || []).map(formatStore)
 
-      const store = stores.find(store => store.cnpj === cnpj)
+      const store = stores.find(
+        store => store.cnpj === cnpj || store.filial === filial
+      )
       // const storeFormated = formatStore(store)
 
       if (!store) {
@@ -65,6 +71,27 @@ class StoreController {
       const client = await auth.getClient();
       const sheets = google.sheets({ version: "v4", auth: client });
 
+      // ler todas as lojas
+      const responseApi = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: "CONSOLIDADO LOJAS!A3:H",
+      });
+
+      const stores = (responseApi.data.values || []).map(formatStore)
+
+      const validadeCnpj = stores.find(
+        store => store.cnpj === cnpj
+      )
+
+      if (validadeCnpj) {
+        return response.status(404).json({ message: "O CNPJ informado já está cadastrado" })
+      }
+
+      if (!cnpj || cnpj === "") {
+        return response.status(404).json({ message: "O CNPJ precisa ser informado" })
+      }
+
+      // Cadastrar loja
       await sheets.spreadsheets.values.append({
         spreadsheetId,
         range: "CONSOLIDADO LOJAS!A:H",
@@ -130,20 +157,60 @@ class StoreController {
 
   // Deletar loja (limpar linha)
   async delete(request, response) {
-    const { id } = request.params;
+    const { cnpj } = request.body;
+
+    const spreadsheetId = process.env.SPREADSHEET_ID;
 
     try {
       const client = await auth.getClient();
       const sheets = google.sheets({ version: "v4", auth: client });
 
-      await sheets.spreadsheets.values.clear({
+      // ler todas as lojas
+      const responseApi = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: `CONSOLIDADO LOJAS!A${linha}:H${linha}`,
+        range: "CONSOLIDADO LOJAS!A3:H",
       });
 
-      res.json({ message: "Loja removida com sucesso!" });
+      const sheet = await sheets.spreadsheets.get({ spreadsheetId });
+      const aba = sheet.data.sheets.find(s => s.properties.title === "CONSOLIDADO LOJAS");
+      const sheetId = aba.properties.sheetId;
+
+      const stores = (responseApi.data.values || []).map(formatStore)
+
+      const rowIndex = stores.findIndex(
+        store => store.cnpj === cnpj
+      )
+
+      // Identificando a linha
+      if (rowIndex == -1) {
+        return response.status(404).json({ message: "Loja não encontrada" })
+      }
+
+      // Linha que será deletada
+      const rowToDelete = rowIndex + 2
+
+      // Deletar limpando os valores da linha
+      await sheets.spreadsheets.batchUpdate({
+        spreadsheetId,
+        requestBody: {
+          requests: [
+            {
+              deleteDimension: {
+                range: {
+                  sheetId: sheetId, // ID da aba; normalmente 0 se for a primeira
+                  dimension: "ROWS",
+                  startIndex: rowToDelete,
+                  endIndex: rowToDelete + 1
+                }
+              }
+            }
+          ]
+        }
+      });
+
+      response.json({ message: "Loja removida com sucesso!" });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      response.status(500).json({ error: error.message });
     }
   };
 
