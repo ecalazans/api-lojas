@@ -87,6 +87,10 @@ class StoreController {
         return response.status(404).json({ message: "O CNPJ informado já está cadastrado" })
       }
 
+      if (!cnpj || cnpj === "") {
+        return response.status(404).json({ message: "O CNPJ precisa ser informado" })
+      }
+
       // Cadastrar loja
       await sheets.spreadsheets.values.append({
         spreadsheetId,
@@ -153,7 +157,7 @@ class StoreController {
 
   // Deletar loja (limpar linha)
   async delete(request, response) {
-    const { cnpj } = request.query;
+    const { cnpj } = request.body;
 
     const spreadsheetId = process.env.SPREADSHEET_ID;
 
@@ -167,6 +171,10 @@ class StoreController {
         range: "CONSOLIDADO LOJAS!A3:H",
       });
 
+      const sheet = await sheets.spreadsheets.get({ spreadsheetId });
+      const aba = sheet.data.sheets.find(s => s.properties.title === "CONSOLIDADO LOJAS");
+      const sheetId = aba.properties.sheetId;
+
       const stores = (responseApi.data.values || []).map(formatStore)
 
       const rowIndex = stores.findIndex(
@@ -179,13 +187,25 @@ class StoreController {
       }
 
       // Linha que será deletada
-      const rowToDelete = rowIndex + 3
+      const rowToDelete = rowIndex + 2
 
       // Deletar limpando os valores da linha
-      await sheets.spreadsheets.values.clear({
-        auth,
+      await sheets.spreadsheets.batchUpdate({
         spreadsheetId,
-        range: `CONSOLIDADO LOJAS!A${rowToDelete}:H${rowToDelete}`,
+        requestBody: {
+          requests: [
+            {
+              deleteDimension: {
+                range: {
+                  sheetId: sheetId, // ID da aba; normalmente 0 se for a primeira
+                  dimension: "ROWS",
+                  startIndex: rowToDelete,
+                  endIndex: rowToDelete + 1
+                }
+              }
+            }
+          ]
+        }
       });
 
       response.json({ message: "Loja removida com sucesso!" });
