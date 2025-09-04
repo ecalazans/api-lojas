@@ -8,6 +8,9 @@ function formatStore(store) {
     data_encerramento: store[5] || "",
     status: store[6] || "",
     observacoes: store[7] || "",
+    chamado: store[8] || "",
+    responsavel: store[9] || "",
+    motivo: store[10] || "",
   }
 }
 
