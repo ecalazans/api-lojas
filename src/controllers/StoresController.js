@@ -13,7 +13,7 @@ class StoreController {
 
       const responseApi = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: "CONSOLIDADO LOJAS!A3:H", // Nome da aba + intervalo
+        range: "CONSOLIDADO LOJAS!A3:K", // Nome da aba + intervalo
       });
 
       const allStores = (responseApi.data.values || []).map(formatStore)
@@ -110,7 +110,7 @@ class StoreController {
   // atualizar STATUS loja
   async update(request, response) {
     // id pode ser CNPJ ou FILIAL
-    const { id, novoStatus } = request.body;
+    const { id, novoStatus, chamado, responsavel, motivo } = request.body;
 
     const spreadsheetId = process.env.SPREADSHEET_ID;
 
@@ -146,6 +146,36 @@ class StoreController {
         valueInputOption: "RAW",
         requestBody: {
           values: [[novoStatus]],
+        },
+      });
+
+      // Atualizar Chamado (coluna I)
+      await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: `CONSOLIDADO LOJAS!I${linhaReal}`,
+        valueInputOption: "RAW",
+        requestBody: {
+          values: [[chamado]],
+        },
+      });
+
+      // Atualizar Responsável (coluna J)
+      await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: `CONSOLIDADO LOJAS!J${linhaReal}`,
+        valueInputOption: "RAW",
+        requestBody: {
+          values: [[responsavel]],
+        },
+      });
+
+      // Atualizar Motivo (coluna K)
+      await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: `CONSOLIDADO LOJAS!K${linhaReal}`,
+        valueInputOption: "RAW",
+        requestBody: {
+          values: [[motivo]],
         },
       });
 
