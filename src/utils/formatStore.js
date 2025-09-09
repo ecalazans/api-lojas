@@ -11,6 +11,8 @@ function formatStore(store) {
     chamado: store[8] || "",
     responsavel: store[9] || "",
     motivo: store[10] || "",
+    tipo: store[11] || "",
+    date_update: store[12] || "",
   }
 }
 
