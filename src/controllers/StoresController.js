@@ -136,6 +136,11 @@ class StoreController {
         return response.status(404).json({ message: "Loja não encontrada" });
       }
 
+      // Pegando a data em que foi feita a alteração
+      const dataUpdate = new Date().toLocaleString("pt-BR", {
+        timeZone: "America/Sao_Paulo"
+      });
+
       const linhaReal = linhaIndex + 3; // +3 porque começamos em A3
       // console.log(linhaReal)
 
@@ -176,6 +181,16 @@ class StoreController {
         valueInputOption: "RAW",
         requestBody: {
           values: [[motivo]],
+        },
+      });
+
+      // Atualizar Data Alteração (coluna L)
+      await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: `CONSOLIDADO LOJAS!M${linhaReal}`,
+        valueInputOption: "RAW",
+        requestBody: {
+          values: [[dataUpdate]],
         },
       });
 
