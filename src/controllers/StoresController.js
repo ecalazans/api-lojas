@@ -5,6 +5,8 @@ const formatStore = require("../utils/formatStore")
 class StoreController {
   // mostrar todas as lojas
   async index(request, response) {
+    const { perfil, marca } = request.user
+
     const spreadsheetId = process.env.SPREADSHEET_ID;
 
     try {
@@ -16,7 +18,13 @@ class StoreController {
         range: "CONSOLIDADO LOJAS!A3:M", // Nome da aba + intervalo
       });
 
-      const allStores = (responseApi.data.values || []).map(formatStore)
+      let allStores = (responseApi.data.values || []).map(formatStore)
+
+      if (perfil !== "admin") {
+        allStores = allStores.filter(store => store.marca === marca)
+      }
+
+      // console.log(allStores.length)
 
       response.json(allStores);
     } catch (error) {
