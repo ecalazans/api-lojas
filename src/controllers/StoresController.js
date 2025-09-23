@@ -15,7 +15,7 @@ class StoreController {
 
       const responseApi = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: "CONSOLIDADO LOJAS!A3:M", // Nome da aba + intervalo
+        range: "CONSOLIDADO LOJAS!A3:Q", // Nome da aba + intervalo
       });
 
       let allStores = (responseApi.data.values || []).map(formatStore)
@@ -44,7 +44,7 @@ class StoreController {
 
       const responseApi = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: "CONSOLIDADO LOJAS!A3:M",
+        range: "CONSOLIDADO LOJAS!A3:Q",
       });
 
       if (!cnpj && !filial) {
@@ -152,57 +152,114 @@ class StoreController {
       const linhaReal = linhaIndex + 3; // +3 porque começamos em A3
       // console.log(linhaReal)
 
-      // atualizar status (coluna G)
-      await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: `CONSOLIDADO LOJAS!G${linhaReal}`,
-        valueInputOption: "RAW",
-        requestBody: {
-          values: [[novoStatus]],
-        },
-      });
+      if (novoStatus === "Inativo") {
+        // atualizar status (coluna G)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!G${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[novoStatus]],
+          },
+        });
 
-      // Atualizar Chamado (coluna I)
-      await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: `CONSOLIDADO LOJAS!I${linhaReal}`,
-        valueInputOption: "RAW",
-        requestBody: {
-          values: [[chamado]],
-        },
-      });
+        // Atualizar Chamado (coluna I)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!I${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[chamado]],
+          },
+        });
 
-      // Atualizar Responsável (coluna J)
-      await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: `CONSOLIDADO LOJAS!J${linhaReal}`,
-        valueInputOption: "RAW",
-        requestBody: {
-          values: [[responsavel]],
-        },
-      });
+        // Atualizar Responsável (coluna J)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!J${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[responsavel]],
+          },
+        });
 
-      // Atualizar Motivo (coluna K)
-      await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: `CONSOLIDADO LOJAS!K${linhaReal}`,
-        valueInputOption: "RAW",
-        requestBody: {
-          values: [[motivo]],
-        },
-      });
+        // Atualizar Motivo (coluna K)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!K${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[motivo]],
+          },
+        });
 
-      // Atualizar Data Alteração (coluna L)
-      await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: `CONSOLIDADO LOJAS!M${linhaReal}`,
-        valueInputOption: "RAW",
-        requestBody: {
-          values: [[dataUpdate]],
-        },
-      });
+        // Atualizar Data Alteração (coluna M)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!M${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[dataUpdate]],
+          },
+        });
 
-      response.json({ message: "Status atualizado com sucesso!" });
+        response.json({ message: "Status atualizado com sucesso!" });
+      }
+
+      if (novoStatus === "Ativo") {
+        // atualizar status (coluna G)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!G${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[novoStatus]],
+          },
+        });
+
+        // Atualizar Chamado (coluna N)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!N${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[chamado]],
+          },
+        });
+
+        // Atualizar Responsável (coluna O)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!O${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[responsavel]],
+          },
+        });
+
+        // Atualizar Motivo (coluna P)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!P${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[motivo]],
+          },
+        });
+
+        // Atualizar Data Alteração (coluna Q)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!Q${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[dataUpdate]],
+          },
+        });
+
+        response.json({ message: "Status atualizado com sucesso!" });
+      }
+
     } catch (error) {
       response.status(500).json({ error: error.message });
     }

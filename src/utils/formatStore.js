@@ -8,11 +8,15 @@ function formatStore(store) {
     data_encerramento: store[5] || "",
     status: store[6] || "",
     observacoes: store[7] || "",
-    chamado: store[8] || "",
-    responsavel: store[9] || "",
-    motivo: store[10] || "",
+    chamado_inativo: store[8] || "",
+    responsavel_inativo: store[9] || "",
+    motivo_inativo: store[10] || "",
     tipo: store[11] || "",
-    date_update: store[12] || "",
+    date_update_inativo: store[12] || "",
+    chamado_ativo: store[13] || "",
+    responsavel_ativo: store[14] || "",
+    motivo_ativo: store[15] || "",
+    date_update_ativo: store[16] || "",
   }
 }
 
