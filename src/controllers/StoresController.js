@@ -82,7 +82,7 @@ class StoreController {
       // ler todas as lojas
       const responseApi = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: "CONSOLIDADO LOJAS!A3:M",
+        range: "CONSOLIDADO LOJAS!A3:Q",
       });
 
       const stores = (responseApi.data.values || []).map(formatStore)
@@ -129,7 +129,7 @@ class StoreController {
       // ler todas as lojas
       const responseApi = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: "CONSOLIDADO LOJAS!A3:M",
+        range: "CONSOLIDADO LOJAS!A3:Q",
       });
 
       const store = (responseApi.data.values || []).map(formatStore)
@@ -278,7 +278,7 @@ class StoreController {
       // ler todas as lojas
       const responseApi = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: "CONSOLIDADO LOJAS!A3:M",
+        range: "CONSOLIDADO LOJAS!A3:Q",
       });
 
       const sheet = await sheets.spreadsheets.get({ spreadsheetId });
