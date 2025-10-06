@@ -17,13 +17,13 @@ function ensureAuthenticated(request, response, next) {
     //   id: Number(user_id)
     // }
 
-    const { sub: user_id, perfil, marca } = verify(token, authConfig.jwt.secret);
+    const { sub: user_id, perfil, cliente } = verify(token, authConfig.jwt.secret);
 
     // agora decoded tem { id, perfil, marca, iat, exp, sub }
     request.user = {
       id: Number(user_id),
       perfil,
-      marca,
+      cliente,
     };
 
     return next();
