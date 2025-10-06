@@ -7,7 +7,7 @@ function formatUser(user) {
     perfil: user[4] || "",
     ativo: user[5] || false,
     last_update_password: user[6] || "",
-    marca: user[7] || ""
+    cliente: user[7] || ""
   }
 }
 

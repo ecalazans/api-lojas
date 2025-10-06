@@ -5,7 +5,7 @@ const formatStore = require("../utils/formatStore")
 class StoreController {
   // mostrar todas as lojas
   async index(request, response) {
-    const { perfil, marca } = request.user
+    const { perfil, cliente } = request.user
 
     const spreadsheetId = process.env.SPREADSHEET_ID;
 
@@ -21,7 +21,7 @@ class StoreController {
       let allStores = (responseApi.data.values || []).map(formatStore)
 
       if (perfil !== "admin") {
-        allStores = allStores.filter(store => store.marca === marca)
+        allStores = allStores.filter(store => store.cliente === cliente)
       }
 
       // console.log(allStores.length)
@@ -118,7 +118,7 @@ class StoreController {
   // atualizar STATUS loja
   async update(request, response) {
     // id pode ser CNPJ ou FILIAL
-    const { id, novoStatus, chamado, responsavel, motivo } = request.body;
+    const { id, novoStatus, tipo, chamado, responsavel, motivo } = request.body;
 
     const spreadsheetId = process.env.SPREADSHEET_ID;
 
@@ -193,6 +193,16 @@ class StoreController {
           },
         });
 
+        // Atualizar Tipo (coluna L)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!L${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[tipo]],
+          },
+        });
+
         // Atualizar Data Alteração (coluna M)
         await sheets.spreadsheets.values.update({
           spreadsheetId,
@@ -214,6 +224,16 @@ class StoreController {
           valueInputOption: "RAW",
           requestBody: {
             values: [[novoStatus]],
+          },
+        });
+
+        // Atualizar Tipo (coluna L)
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: `CONSOLIDADO LOJAS!L${linhaReal}`,
+          valueInputOption: "RAW",
+          requestBody: {
+            values: [[tipo]],
           },
         });
 
