@@ -18,7 +18,7 @@ O objetivo é disponibilizar endpoints REST para consulta, criação e atualiza�
 ---
 
 ## ⚙️ Estrutura do Projeto
-
+```
   📂 src
   ┣ 📂 config        # Configurações (auth e GoogleAuth)
   ┣ 📂 controllers   # Regras de negócio e integração com o Google Sheets
@@ -27,18 +27,19 @@ O objetivo é disponibilizar endpoints REST para consulta, criação e atualiza�
   ┣ 📂 utils         # Funções auxiliares (tratamento de dados, formatação, logs, etc)
   ┣ 📄 server.js     # Ponto de entrada da aplicação
   ┗ 📄 .env          # Variáveis de ambiente (não versionadas)
+```
 
 ---
+
 ## 🧩 Integração com o Google Sheets
 
   A API utiliza o Google Sheets API para leitura e escrita de dados.
   Cada aba da planilha representa uma entidade do sistema (ex: Lojas, Usuários).
   As operações CRUD são traduzidas em leituras e escritas nas células correspondentes.
-  
+
 ---
 
 ## 🧪 Executando o Projeto Localmente
----
 
   # Clonar o repositório
   git clone https://github.com/seu-usuario/controle-lojas-api.git
@@ -54,11 +55,5 @@ O objetivo é disponibilizar endpoints REST para consulta, criação e atualiza�
 
 ---
 
----
-
-## 👤 Autor
-
-  **Erick Domingos Calazans**
-  Desenvolvedor Web | Node.js | Google API
-
----
+## 👨‍💻 Autor
+Feito com 💙 por Erick Calazans
