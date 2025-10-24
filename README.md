@@ -40,19 +40,19 @@ O objetivo é disponibilizar endpoints REST para consulta, criação e atualiza�
 ---
 
 ## 🧪 Executando o Projeto Localmente
+```
+# Clonar o repositório
+git clone https://github.com/seu-usuario/controle-lojas-api.git
 
-  # Clonar o repositório
-  git clone https://github.com/seu-usuario/controle-lojas-api.git
+# Entrar na pasta
+cd controle-lojas-api
 
-  # Entrar na pasta
-  cd controle-lojas-api
+# Instalar dependências
+npm install
 
-  # Instalar dependências
-  npm install
-
-  # Rodar o servidor
-  npm run dev
-
+# Rodar o servidor
+npm run dev
+```
 ---
 
 ## 👨‍💻 Autor
