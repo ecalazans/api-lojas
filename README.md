@@ -12,8 +12,7 @@ O objetivo é disponibilizar endpoints REST para consulta, criação e atualiza�
 - **Google Sheets API**
 - **dotenv** (para variáveis de ambiente)
 - **CORS**
-- **Axios / Fetch** (para comunicação HTTP)
-- **Vercel** (hospedagem da API)
+- **Axios** (para comunicação HTTP)
 
 ---
 
@@ -42,10 +41,10 @@ O objetivo é disponibilizar endpoints REST para consulta, criação e atualiza�
 ## 🧪 Executando o Projeto Localmente
 ```
 # Clonar o repositório
-git clone https://github.com/seu-usuario/controle-lojas-api.git
+git clone https://github.com/ecalazans/api-lojas.git
 
 # Entrar na pasta
-cd controle-lojas-api
+cd api-lojas
 
 # Instalar dependências
 npm install
